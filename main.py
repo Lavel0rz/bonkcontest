@@ -19,41 +19,60 @@ df_previous["Net Points"] = df_previous.get("Net Points", 0)  # Default to 0 if 
 
 st.title("Bonk Contest Leaderboard")
 top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
 if len(top_contributors) >= 3:
-    podium_cols = st.columns([1, 1, 1])
-
-    # Second Place
-    # Second Place
-    podium_cols[0].markdown(
-        f"""
-        <div style="text-align: center; background-color: #c0c0c0; padding: 10px; border-radius: 10px; height: 225px; width: 225px; display: inline-block;">
-            <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
-            <p>Points: {int(top_contributors.iloc[1]['Net Points'])}</p>
-            <p>Team: {top_contributors.iloc[1]['Team']}</p>
-        </div>
+    st.markdown(
+        """
+        <style>
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .podium-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            height: 200px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .first {
+            background-color: #ffd700;
+            transform: translateY(-30px); /* Move gold position higher */
+        }
+        .second {
+            background-color: #c0c0c0;
+        }
+        .third {
+            background-color: #cd7f32;
+            transform: translateY(20px); /* Move bronze position lower */
+        }
+        </style>
         """,
         unsafe_allow_html=True,
     )
 
-    # First Place
-    podium_cols[1].markdown(
+    st.markdown(
         f"""
-        <div style="text-align: center; background-color: #ffd700; padding: 10px; border-radius: 10px; height: 225px; width: 225px; display: inline-block;">
-            <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
-            <p>Points: {int(top_contributors.iloc[0]['Net Points'])}</p>
-            <p>Team: {top_contributors.iloc[0]['Team']}</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # Third Place
-    podium_cols[2].markdown(
-        f"""
-        <div style="text-align: center; background-color: #cd7f32; padding: 10px; border-radius: 10px; height: 225px; width: 225px; display: inline-block;">
-            <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
-            <p>Points: {int(top_contributors.iloc[2]['Net Points'])}</p>
-            <p>Team: {top_contributors.iloc[2]['Team']}</p>
+        <div class="podium-container">
+            <div class="podium-item second">
+                <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
+                <p>Points: {int(top_contributors.iloc[1]['Net Points'])}</p>
+                <p>Team: {top_contributors.iloc[1]['Team']}</p>
+            </div>
+            <div class="podium-item first">
+                <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
+                <p>Points: {int(top_contributors.iloc[0]['Net Points'])}</p>
+                <p>Team: {top_contributors.iloc[0]['Team']}</p>
+            </div>
+            <div class="podium-item third">
+                <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
+                <p>Points: {int(top_contributors.iloc[2]['Net Points'])}</p>
+                <p>Team: {top_contributors.iloc[2]['Team']}</p>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
