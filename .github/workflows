@@ -27,7 +27,7 @@ jobs:
 
     - name: Run fetch.py
 
-      run: python scripts/fetch.py
+      run: python fetch.py
 
     - name: Commit and push changes
       run: |
