@@ -18,7 +18,46 @@ df_previous = pd.read_csv(previous_csv) if os.path.exists(previous_csv) else df.
 df_previous["Net Points"] = df_previous.get("Net Points", 0)  # Default to 0 if missing
 
 st.title("Bonk Contest Leaderboard")
+top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+if len(top_contributors) >= 3:
+    podium_cols = st.columns([1, 1, 1])
 
+    # Second Place
+    # Second Place
+    podium_cols[0].markdown(
+        f"""
+        <div style="text-align: center; background-color: #c0c0c0; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+            <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
+            <p>Points: {int(top_contributors.iloc[1]['Net Points'])}</p>
+            <p>Team: {top_contributors.iloc[1]['Team']}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # First Place
+    podium_cols[1].markdown(
+        f"""
+        <div style="text-align: center; background-color: #ffd700; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+            <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
+            <p>Points: {int(top_contributors.iloc[0]['Net Points'])}</p>
+            <p>Team: {top_contributors.iloc[0]['Team']}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Third Place
+    podium_cols[2].markdown(
+        f"""
+        <div style="text-align: center; background-color: #cd7f32; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+            <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
+            <p>Points: {int(top_contributors.iloc[2]['Net Points'])}</p>
+            <p>Team: {top_contributors.iloc[2]['Team']}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 # Aggregate Global Points for Teams
 team_points = df.groupby("Team")["Net Points"].sum().reset_index()
 team_points = team_points.sort_values(by="Net Points", ascending=False)
