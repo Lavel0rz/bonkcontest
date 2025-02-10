@@ -33,8 +33,8 @@ if len(top_contributors) >= 3:
             text-align: center;
             padding: 10px;
             border-radius: 10px;
-            height: 200px;
-            width: 200px;
+            height: 225px;
+            width: 225px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
