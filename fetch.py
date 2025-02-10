@@ -3,9 +3,10 @@ import requests
 import csv
 import time
 import os
+from datetime import datetime
 from collections import defaultdict
 
-
+# API Details
 API_URL = "https://api.pet.game/"
 QUERY_TEMPLATE = """
 query MyQuery {
@@ -19,15 +20,14 @@ query MyQuery {
   }
 }
 """
-CSV_FILE = "leaderboard.csv"
 
+# Get today's date
+TODAY = datetime.now().strftime("%Y-%m-%d")
+CSV_FILE = f"leaderboard_{TODAY}.csv"
 
+# Load bonks data (list of pets and their teams)
 bonks = pd.read_csv("bonks.csv", header=None, names=["ID", "Name", "Team"])
-
-
 bonks["ID"] = bonks["ID"].astype(int)
-
-
 PET_IDS = bonks["ID"].tolist()
 
 def fetch_attacks(pet_id, past_24h):
@@ -41,29 +41,6 @@ def fetch_attacks(pet_id, past_24h):
     else:
         print(f"Error fetching data for pet {pet_id}:", response.text)
         return []
-
-def load_leaderboard():
-    """Load existing leaderboard from CSV, ensuring proper column selection."""
-    leaderboard = defaultdict(int)
-
-    if not os.path.exists(CSV_FILE):
-        return leaderboard  # Return empty if file doesn't exist
-
-    try:
-        df = pd.read_csv(CSV_FILE)
-
-        # Ensure the required columns exist
-        if "ID" in df.columns and "Net Points" in df.columns:
-            for _, row in df.iterrows():
-                leaderboard[int(row["ID"])] = int(row["Net Points"])
-        else:
-            print("⚠️ Error: CSV structure is incorrect. Expected columns: ID, Net Points.")
-
-    except Exception as e:
-        print(f"⚠️ Error reading leaderboard CSV: {e}")
-
-    return leaderboard
-
 
 def update_leaderboard(attacks, leaderboard):
     """Update leaderboard based on net points won/lost."""
@@ -82,14 +59,12 @@ def update_leaderboard(attacks, leaderboard):
 
 def save_leaderboard(leaderboard):
     """Save leaderboard to a CSV file with Name and Team info."""
-    
-    # Convert leaderboard dictionary to a DataFrame
     leaderboard_df = pd.DataFrame(list(leaderboard.items()), columns=["ID", "Net Points"])
     
     # Merge with bonks data (adding Name and Team)
     final_leaderboard = bonks.merge(leaderboard_df, on="ID", how="left").fillna(0)
 
-    # Save to CSV
+    # Save with today's date
     final_leaderboard.to_csv(CSV_FILE, index=False)
 
 def main():
@@ -97,7 +72,7 @@ def main():
     past_24h = current_time - 86400  # 24 hours ago
 
     print("Fetching latest attacks for all tracked pets...")
-    leaderboard = load_leaderboard()  # Load previous day's data
+    leaderboard = defaultdict(int)  # Start fresh each day
 
     for pet_id in PET_IDS:
         print(f"Fetching attacks for pet {pet_id}...")
@@ -110,3 +85,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
