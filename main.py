@@ -43,10 +43,10 @@ for index, row in team_points.iterrows():
 top_contributors = df.sort_values(by="Net Points", ascending=False)
 
 st.subheader("Top Contributors Overall")
-st.dataframe(top_contributors.head(10), use_container_width=True)
+st.dataframe(top_contributors.head(10).reset_index(drop=True), use_container_width=True)
 
 # Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
 team_contributors = df[df["Team"] == selected_team].sort_values(by="Net Points", ascending=False)
-st.dataframe(team_contributors, use_container_width=True)
+st.dataframe(team_contributors.reset_index(drop=True), use_container_width=True)
