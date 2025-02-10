@@ -41,7 +41,7 @@ for index, row in team_points.iterrows():
 
 # Top Contributors Overall
 # Top Contributors Overall
-top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True).head(10)
 
 st.subheader("Top Contributors Overall")
 st.markdown(top_contributors.to_html(index=False), unsafe_allow_html=True)
