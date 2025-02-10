@@ -40,14 +40,15 @@ for index, row in team_points.iterrows():
         col2.metric(label=row["Team"], value=int(row["Net Points"]), delta=int(row["Delta"]))
 
 # Top Contributors Overall
+# Top Contributors Overall
 top_contributors = df.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
 
 st.subheader("Top Contributors Overall")
-st.dataframe(top_contributors.head(10), use_container_width=True)
+st.markdown(top_contributors.to_html(index=False), unsafe_allow_html=True)
 
 # Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
 team_contributors = df[df["Team"] == selected_team].sort_values(by="Net Points", ascending=False).reset_index(drop=True)
-st.dataframe(team_contributors, use_container_width=True)
+st.markdown(team_contributors.to_html(index=False), unsafe_allow_html=True)
 
