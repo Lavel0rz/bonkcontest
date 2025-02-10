@@ -26,7 +26,7 @@ if len(top_contributors) >= 3:
     # Second Place
     podium_cols[0].markdown(
         f"""
-        <div style="text-align: center; background-color: #c0c0c0; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+        <div style="text-align: center; background-color: #c0c0c0; padding: 10px; border-radius: 10px; height: 250px; width: 250px; display: inline-block;">
             <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
             <p>Points: {int(top_contributors.iloc[1]['Net Points'])}</p>
             <p>Team: {top_contributors.iloc[1]['Team']}</p>
@@ -38,7 +38,7 @@ if len(top_contributors) >= 3:
     # First Place
     podium_cols[1].markdown(
         f"""
-        <div style="text-align: center; background-color: #ffd700; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+        <div style="text-align: center; background-color: #ffd700; padding: 10px; border-radius: 10px; height: 250px; width: 250px; display: inline-block;">
             <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
             <p>Points: {int(top_contributors.iloc[0]['Net Points'])}</p>
             <p>Team: {top_contributors.iloc[0]['Team']}</p>
@@ -50,7 +50,7 @@ if len(top_contributors) >= 3:
     # Third Place
     podium_cols[2].markdown(
         f"""
-        <div style="text-align: center; background-color: #cd7f32; padding: 10px; border-radius: 10px; height: 200px; width: 200px; display: inline-block;">
+        <div style="text-align: center; background-color: #cd7f32; padding: 10px; border-radius: 10px; height: 250px; width: 250px; display: inline-block;">
             <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
             <p>Points: {int(top_contributors.iloc[2]['Net Points'])}</p>
             <p>Team: {top_contributors.iloc[2]['Team']}</p>
