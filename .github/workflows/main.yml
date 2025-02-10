@@ -28,9 +28,11 @@ jobs:
     - name: Run fetch.py
 
       run: python fetch.py
-    
-    - name: Commit and Push Changes
+
+    - name: Commit and push changes
       run: |
-        git add leaderboard.csv
-        git commit -m "Automated data fetch and update" || echo "No changes to commit"
-        git push https://${{ secrets.GITHUB_TOKEN }}@github.com/Lavel0rz/bonkcontest.git main
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add -A
+        git commit -m 'Automated data fetch and update'
+        git push
