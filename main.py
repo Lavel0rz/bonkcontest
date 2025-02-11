@@ -113,7 +113,8 @@ st.subheader("Top Contributors Overall")
 st.markdown(top_contributors.head(10).to_html(index=False), unsafe_allow_html=True)
 
 # Team-Specific Contributors
+# Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
-team_contributors = df[df["Team"] == selected_team].sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Net Points", ascending=False).reset_index(drop=True)
 st.markdown(team_contributors.to_html(index=False), unsafe_allow_html=True)
