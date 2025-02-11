@@ -99,7 +99,6 @@ df_team_prev = df_previous.groupby("Team")["Bonk Points Won"].sum().reset_index(
 df_team_agg = df_team_agg.merge(df_team_prev, on="Team", suffixes=("", "_prev"), how="left").fillna(0)
 df_team_agg["Delta"] = df_team_agg["Bonk Points Won"] - df_team_agg["Bonk Points Won_prev"]
 
-
 st.subheader("Global Points by Team")
 col1, col2 = st.columns(2)
 
@@ -109,13 +108,24 @@ for index, row in df_team_agg.iterrows():
     else:
         col2.metric(label=row["Team"], value=int(row["Bonk Points Won"]), delta=int(row["Delta"]))
 
+# Progress Bars for Team Goals
+goals = {"$FP x Coinbase wen": 2000000, "Frenemies": 1500000}
+
+st.subheader("Team Bonking Victory Goals")
+for team, goal in goals.items():
+    current_points = df_team_agg[df_team_agg["Team"] == team]["Bonk Points Won"].sum()
+    progress = min(current_points / goal, 1.0)
+    
+    st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
+    st.progress(progress)
+
 # Top Contributors Overall
 st.subheader("Top Contributors Overall")
 st.markdown(top_contributors.head(10).to_html(index=False), unsafe_allow_html=True)
 
 # Team-Specific Contributors
-# Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
 team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Bonk Points Won", ascending=False).reset_index(drop=True)
 st.markdown(team_contributors.to_html(index=False), unsafe_allow_html=True)
+
