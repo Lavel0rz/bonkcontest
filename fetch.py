@@ -1,6 +1,5 @@
 import pandas as pd
 import requests
-import csv
 import time
 import os
 from datetime import datetime
@@ -43,23 +42,19 @@ def fetch_attacks(pet_id, past_24h):
         return []
 
 def update_leaderboard(attacks, leaderboard):
-    """Update leaderboard based on net points won/lost."""
+    """Update leaderboard based on bonk wins only."""
     for attack in attacks:
         attacker = attack["attackerId"]
         winner = attack["winnerId"]
-        points_won = int(attack["won"]) // 10**12  # Convert from wei
-
-        if attacker in PET_IDS:
-            if attacker == winner:
-                leaderboard[attacker] += points_won  # Attacker won → gain points
-            else:
-                leaderboard[attacker] -= points_won  # Attacker lost → lose points
+        
+        if attacker in PET_IDS and attacker == winner:
+            leaderboard[attacker] += 1  # Count only wins
 
     return leaderboard
 
 def save_leaderboard(leaderboard):
     """Save leaderboard to a CSV file with Name and Team info."""
-    leaderboard_df = pd.DataFrame(list(leaderboard.items()), columns=["ID", "Net Points"])
+    leaderboard_df = pd.DataFrame(list(leaderboard.items()), columns=["ID", "Bonk Wins"])
     
     # Merge with bonks data (adding Name and Team)
     final_leaderboard = bonks.merge(leaderboard_df, on="ID", how="left").fillna(0)
@@ -78,10 +73,9 @@ def main():
         print(f"Fetching attacks for pet {pet_id}...")
         attacks = fetch_attacks(pet_id, past_24h)
         print(f"Processing {len(attacks)} attacks for pet {pet_id}...")  
-        leaderboard = update_leaderboard(attacks, leaderboard)  # Sum new results
+        leaderboard = update_leaderboard(attacks, leaderboard)  # Count only wins
 
     save_leaderboard(leaderboard)
-
 
 if __name__ == "__main__":
     main()
