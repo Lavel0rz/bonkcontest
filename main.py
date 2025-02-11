@@ -109,7 +109,7 @@ for index, row in df_team_agg.iterrows():
         col2.metric(label=row["Team"], value=int(row["Bonk Points Won"]), delta=int(row["Delta"]))
 
 # Progress Bars for Team Goals
-goals = {"$FP x Coinbase wen": 2000000, "Frenemies": 1500000}
+goals = {"$FP x Coinbase wen?": 2000000, "FRENEMIES": 1500000}
 
 st.subheader("Team Bonking Victory Goals")
 for team, goal in goals.items():
