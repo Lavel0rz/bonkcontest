@@ -22,13 +22,13 @@ df = load_all_leaderboards()
 # Load current day's leaderboard
 df_today = pd.read_csv(f"leaderboard_{TODAY}.csv") if os.path.exists(f"leaderboard_{TODAY}.csv") else pd.DataFrame()
 df_previous = pd.read_csv(f"leaderboard_{YESTERDAY}.csv") if os.path.exists(f"leaderboard_{YESTERDAY}.csv") else df_today.copy()
-df_previous["Net Points"] = df_previous.get("Net Points", 0)
+df_previous["Bonk Wins"] = df_previous.get("Bonk Wins", 0)
 
 st.title("Bonk Contest Leaderboard")
 
 # Podium for Top 3 Players
 top_contributors = df.groupby(["ID", "Name", "Team"]).sum().reset_index()
-top_contributors = top_contributors.sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+top_contributors = top_contributors.sort_values(by="Bonk Wins", ascending=False).reset_index(drop=True)
 
 if len(top_contributors) >= 3:
     st.markdown(
@@ -89,24 +89,24 @@ if len(top_contributors) >= 3:
     )
 
 # Aggregate Global Points for Teams
-df_team_agg = df.groupby("Team")["Net Points"].sum().reset_index()
-df_team_agg = df_team_agg.sort_values(by="Net Points", ascending=False)
+df_team_agg = df.groupby("Team")["Bonk Wins"].sum().reset_index()
+df_team_agg = df_team_agg.sort_values(by="Bonk Wins", ascending=False)
 
 # Aggregate yesterday's points for delta calculation
-df_team_prev = df_previous.groupby("Team")["Net Points"].sum().reset_index()
+df_team_prev = df_previous.groupby("Team")["Bonk Wins"].sum().reset_index()
 
 # Merge current and previous team points to calculate daily changes
 df_team_agg = df_team_agg.merge(df_team_prev, on="Team", suffixes=("", "_prev"), how="left").fillna(0)
-df_team_agg["Delta"] = df_team_agg["Net Points"] - df_team_agg["Net Points_prev"]
+df_team_agg["Delta"] = df_team_agg["Bonk Wins"] - df_team_agg["Net Points_prev"]
 
 st.subheader("Global Points by Team")
 col1, col2 = st.columns(2)
 
 for index, row in df_team_agg.iterrows():
     if index % 2 == 0:
-        col1.metric(label=row["Team"], value=int(row["Net Points"]), delta=int(row["Delta"]))
+        col1.metric(label=row["Team"], value=int(row["Bonk Wins"]), delta=int(row["Delta"]))
     else:
-        col2.metric(label=row["Team"], value=int(row["Net Points"]), delta=int(row["Delta"]))
+        col2.metric(label=row["Team"], value=int(row["Bonk Wins"]), delta=int(row["Delta"]))
 
 # Top Contributors Overall
 st.subheader("Top Contributors Overall")
@@ -116,5 +116,5 @@ st.markdown(top_contributors.head(10).to_html(index=False), unsafe_allow_html=Tr
 # Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
-team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Net Points", ascending=False).reset_index(drop=True)
+team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Bonk Wins", ascending=False).reset_index(drop=True)
 st.markdown(team_contributors.to_html(index=False), unsafe_allow_html=True)
