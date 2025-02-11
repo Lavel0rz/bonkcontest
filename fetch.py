@@ -9,11 +9,10 @@ from collections import defaultdict
 API_URL = "https://api.pet.game/"
 QUERY_TEMPLATE = """
 query MyQuery {
-  attacks(where: {attackerId: %d, createdAt_gt: %d}) {
+  attacks(where: {attackerId: %d, winnerId: %d, createdAt_gt: %d}) {
     items {
       attackerId
       won
-      winnerId
     }
     totalCount
   }
@@ -30,8 +29,8 @@ bonks["ID"] = bonks["ID"].astype(int)
 PET_IDS = bonks["ID"].tolist()
 
 def fetch_attacks(pet_id, past_24h):
-    """Fetch attack data from the API for a specific pet in the last 24 hours."""
-    query = QUERY_TEMPLATE % (pet_id, past_24h)
+    """Fetch attack data from the API for a specific pet in the last 24 hours where attacker is the winner."""
+    query = QUERY_TEMPLATE % (pet_id, pet_id, past_24h)
     response = requests.post(API_URL, json={'query': query})
     
     if response.status_code == 200:
@@ -45,10 +44,9 @@ def update_leaderboard(attacks, leaderboard):
     """Update leaderboard based on points won in bonks only."""
     for attack in attacks:
         attacker = attack["attackerId"]
-        winner = attack["winnerId"]
         points_won = int(attack["won"]) // 10**12  # Convert from wei
         
-        if attacker in PET_IDS and attacker == winner:
+        if attacker in PET_IDS:
             leaderboard[attacker] += points_won  # Sum only points won
 
     return leaderboard
