@@ -70,17 +70,17 @@ if len(top_contributors) >= 3:
         <div class="podium-container">
             <div class="podium-item second">
                 <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[1]['Net Points'])}</p>
+                <p>Points: {int(top_contributors.iloc[1]['Bonk Wins'])}</p>
                 <p>Team: {top_contributors.iloc[1]['Team']}</p>
             </div>
             <div class="podium-item first">
                 <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[0]['Net Points'])}</p>
+                <p>Points: {int(top_contributors.iloc[0]['Bonk Wins'])}</p>
                 <p>Team: {top_contributors.iloc[0]['Team']}</p>
             </div>
             <div class="podium-item third">
                 <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[2]['Net Points'])}</p>
+                <p>Points: {int(top_contributors.iloc[2]['Bonk Wins'])}</p>
                 <p>Team: {top_contributors.iloc[2]['Team']}</p>
             </div>
         </div>
