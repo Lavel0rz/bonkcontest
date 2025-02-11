@@ -22,13 +22,13 @@ df = load_all_leaderboards()
 # Load current day's leaderboard
 df_today = pd.read_csv(f"leaderboard_{TODAY}.csv") if os.path.exists(f"leaderboard_{TODAY}.csv") else pd.DataFrame()
 df_previous = pd.read_csv(f"leaderboard_{YESTERDAY}.csv") if os.path.exists(f"leaderboard_{YESTERDAY}.csv") else df_today.copy()
-df_previous["Bonk Wins"] = df_previous.get("Bonk Wins", 0)
+df_previous["Bonk Points Won"] = df_previous.get("Bonk Points Won", 0)
 
 st.title("Bonk Contest Leaderboard")
 
 # Podium for Top 3 Players
 top_contributors = df.groupby(["ID", "Name", "Team"]).sum().reset_index()
-top_contributors = top_contributors.sort_values(by="Bonk Wins", ascending=False).reset_index(drop=True)
+top_contributors = top_contributors.sort_values(by="Bonk Points Won", ascending=False).reset_index(drop=True)
 
 if len(top_contributors) >= 3:
     st.markdown(
@@ -70,17 +70,17 @@ if len(top_contributors) >= 3:
         <div class="podium-container">
             <div class="podium-item second">
                 <h4>🥈 {top_contributors.iloc[1]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[1]['Bonk Wins'])}</p>
+                <p>Points: {int(top_contributors.iloc[1]['Bonk Points Won'])}</p>
                 <p>Team: {top_contributors.iloc[1]['Team']}</p>
             </div>
             <div class="podium-item first">
                 <h4>🥇 {top_contributors.iloc[0]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[0]['Bonk Wins'])}</p>
+                <p>Points: {int(top_contributors.iloc[0]['Bonk Points Won'])}</p>
                 <p>Team: {top_contributors.iloc[0]['Team']}</p>
             </div>
             <div class="podium-item third">
                 <h4>🥉 {top_contributors.iloc[2]['Name']}</h4>
-                <p>Points: {int(top_contributors.iloc[2]['Bonk Wins'])}</p>
+                <p>Points: {int(top_contributors.iloc[2]['Bonk Points Won'])}</p>
                 <p>Team: {top_contributors.iloc[2]['Team']}</p>
             </div>
         </div>
@@ -89,24 +89,25 @@ if len(top_contributors) >= 3:
     )
 
 # Aggregate Global Points for Teams
-df_team_agg = df.groupby("Team")["Bonk Wins"].sum().reset_index()
-df_team_agg = df_team_agg.sort_values(by="Bonk Wins", ascending=False)
+df_team_agg = df.groupby("Team")["Bonk Points Won"].sum().reset_index()
+df_team_agg = df_team_agg.sort_values(by="Bonk Points Won", ascending=False)
 
 # Aggregate yesterday's points for delta calculation
-df_team_prev = df_previous.groupby("Team")["Bonk Wins"].sum().reset_index()
+df_team_prev = df_previous.groupby("Team")["Bonk Points Won"].sum().reset_index()
 
 # Merge current and previous team points to calculate daily changes
 df_team_agg = df_team_agg.merge(df_team_prev, on="Team", suffixes=("", "_prev"), how="left").fillna(0)
-df_team_agg["Delta"] = df_team_agg["Bonk Wins"] - df_team_agg["Net Points_prev"]
+df_team_agg["Delta"] = df_team_agg["Bonk Points Won"] - df_team_agg["Bonk Points Won_prev"]
+
 
 st.subheader("Global Points by Team")
 col1, col2 = st.columns(2)
 
 for index, row in df_team_agg.iterrows():
     if index % 2 == 0:
-        col1.metric(label=row["Team"], value=int(row["Bonk Wins"]), delta=int(row["Delta"]))
+        col1.metric(label=row["Team"], value=int(row["Bonk Points Won"]), delta=int(row["Delta"]))
     else:
-        col2.metric(label=row["Team"], value=int(row["Bonk Wins"]), delta=int(row["Delta"]))
+        col2.metric(label=row["Team"], value=int(row["Bonk Points Won"]), delta=int(row["Delta"]))
 
 # Top Contributors Overall
 st.subheader("Top Contributors Overall")
@@ -116,5 +117,5 @@ st.markdown(top_contributors.head(10).to_html(index=False), unsafe_allow_html=Tr
 # Team-Specific Contributors
 st.subheader("Top Contributors by Team")
 selected_team = st.selectbox("Select a Team", df["Team"].unique())
-team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Bonk Wins", ascending=False).reset_index(drop=True)
+team_contributors = df[df["Team"] == selected_team].groupby(["ID", "Name", "Team"]).sum().reset_index().sort_values(by="Bonk Points Won", ascending=False).reset_index(drop=True)
 st.markdown(team_contributors.to_html(index=False), unsafe_allow_html=True)
