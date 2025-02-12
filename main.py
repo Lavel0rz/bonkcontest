@@ -34,7 +34,7 @@ def get_base64_image(image_path):
         base64_string = base64.b64encode(img_file.read()).decode()
     return base64_string
 
-image_path = r"fpbg.jpg"
+image_path = "fpbg.jpg"
 base64_image = get_base64_image(image_path)
 
 if base64_image:
