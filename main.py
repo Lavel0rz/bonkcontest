@@ -110,14 +110,19 @@ for index, row in df_team_agg.iterrows():
 
 # Progress Bars for Team Goals
 goals = {"$FP x Coinbase wen?": 2000000, "FRENEMIES": 1500000}
+images = {"$FP x Coinbase wen?": "wen.png", "FRENEMIES": "panda3.png"}
 
 st.subheader("Team Bonking Victory Goals")
 for team, goal in goals.items():
     current_points = df_team_agg[df_team_agg["Team"] == team]["Bonk Points Won"].sum()
     progress = min(current_points / goal, 1.0)
     
-    st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
-    st.progress(progress)
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        st.image(images[team], width=100)
+    with col2:
+        st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
+        st.progress(progress)
 
 # Top Contributors Overall
 st.subheader("Top Contributors Overall")
