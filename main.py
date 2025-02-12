@@ -48,7 +48,7 @@ background_image = f"""
 }}
 </style>
 """
-
+st.markdown(background_image, unsafe_allow_html=True)
 # Podium for Top 3 Players
 top_contributors = df.groupby(["ID", "Name", "Team"]).sum().reset_index()
 top_contributors = top_contributors.sort_values(by="Bonk Points Won", ascending=False).reset_index(drop=True)
