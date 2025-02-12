@@ -26,6 +26,29 @@ df_previous["Bonk Points Won"] = df_previous.get("Bonk Points Won", 0)
 
 st.title("Bonk Contest Leaderboard")
 
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        base64_string = base64.b64encode(img_file.read()).decode()
+    return base64_string
+
+# Path to your local image
+image_path = "fpbg.jpg"  # Make sure this file is in the same directory
+
+# Encode the image
+base64_image = get_base64_image(image_path)
+
+# Inject CSS with the base64 image
+background_image = f"""
+<style>
+[data-testid="stAppViewContainer"] > .main {{
+    background-image: url("data:image/jpeg;base64,{base64_image}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}}
+</style>
+"""
+
 # Podium for Top 3 Players
 top_contributors = df.groupby(["ID", "Name", "Team"]).sum().reset_index()
 top_contributors = top_contributors.sort_values(by="Bonk Points Won", ascending=False).reset_index(drop=True)
