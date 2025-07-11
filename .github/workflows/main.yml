@@ -2,8 +2,8 @@ name: Automate Fetch and Upload
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs every day at midnight UTC
-  workflow_dispatch:  # Allows manual triggering of the workflow
+    - cron: '0 * * * *'  # Runs every hour at minute 0 (UTC)
+  workflow_dispatch:      # Allows manual triggering
 
 jobs:
   fetch_and_upload:
@@ -23,10 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pandas requests
 
-
-
     - name: Run fetch.py
-
       run: python fetch.py
 
     - name: Commit and push changes
@@ -34,5 +31,5 @@ jobs:
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         git add -A
-        git commit -m 'Automated data fetch and update'
+        git diff --cached --quiet || git commit -m 'Automated data fetch and update'
         git push
