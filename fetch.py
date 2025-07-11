@@ -63,16 +63,16 @@ def save_leaderboard(leaderboard):
 
 def main():
     current_time = int(time.time())  # Current Unix timestamp
-    past_24h = current_time - 86400  # 24 hours ago
+    past_1h = current_time - 3600  # 1 hour ago
 
-    print("Fetching latest attacks for all tracked pets...")
-    leaderboard = defaultdict(int)  # Start fresh each day
+    print("Fetching latest attacks for all tracked pets in the last hour...")
+    leaderboard = defaultdict(int)
 
     for pet_id in PET_IDS:
         print(f"Fetching attacks for pet {pet_id}...")
-        attacks = fetch_attacks(pet_id, past_24h)
+        attacks = fetch_attacks(pet_id, past_1h)
         print(f"Processing {len(attacks)} attacks for pet {pet_id}...")  
-        leaderboard = update_leaderboard(attacks, leaderboard)  # Sum only points won
+        leaderboard = update_leaderboard(attacks, leaderboard)
 
     save_leaderboard(leaderboard)
 
