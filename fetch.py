@@ -21,7 +21,7 @@ query MyQuery {
 
 # Get today's date
 TODAY = datetime.now().strftime("%Y-%m-%d")
-CSV_FILE = f"leaderboard_{TODAY}.csv"
+CSV_FILE = f"leaderboard_{datetime.now().strftime('%Y-%m-%d_%H00')}.csv"
 
 # Load bonks data (list of pets and their teams)
 bonks = pd.read_csv("bonks.csv", header=None, names=["ID", "Name", "Team"])
