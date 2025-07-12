@@ -85,7 +85,7 @@ for index, row in df_team_agg.iterrows():
 # ─────────────────────────────────────────────────────────────
 goals = {
     "$FP x Coinbase wen?": 2_000_000,
-    "FRENEMIES": 1_500_000
+    "FRENEMIES": 2_000_000
 }
 images = {
     "$FP x Coinbase wen?": "wen.png",
