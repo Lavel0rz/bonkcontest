@@ -62,29 +62,24 @@ if base64_image:
 # App Title
 # ─────────────────────────────────────────────────────────────
 
-
 contest_end = datetime(2025, 7, 18, 16, 59, tzinfo=timezone.utc)
 
-st.header("Contest Countdown")
+placeholder = st.empty()
 
-# Streamlit loop to update countdown every second
-while True:
-    now = datetime.now(timezone.utc)
-    remaining = contest_end - now
+now = datetime.now(timezone.utc)
+remaining = contest_end - now
 
-    if remaining.total_seconds() <= 0:
-        st.write("Contest has ended!")
-        break
-
-    # Calculate days, hours, minutes, seconds
+if remaining.total_seconds() <= 0:
+    placeholder.markdown("**Contest has ended!**")
+else:
     days = remaining.days
     hours, remainder = divmod(remaining.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
 
-    countdown_str = f"Contest ends in: {days}d {hours}h {minutes}m {seconds}s"
-    st.write(countdown_str)
+    placeholder.markdown(
+        f"### Contest ends in: {days}d {hours}h {minutes}m {seconds}s"
+    )
 
-    # Wait for 1 second before update
     time.sleep(1)
     st.experimental_rerun()
 # ─────────────────────────────────────────────────────────────
