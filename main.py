@@ -78,8 +78,7 @@ while True:
     mm, ss = divmod(remaining, 60)
     ph.metric("Contest ends in:", f"{mm:02d}:{ss:02d}")
     
-    time.sleep(1)
-    st.experimental_rerun()
+
 # Team Delta (Current Hour vs Previous)
 # ─────────────────────────────────────────────────────────────
 df_team_agg = df_this_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
