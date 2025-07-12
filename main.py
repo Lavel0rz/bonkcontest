@@ -64,25 +64,22 @@ if base64_image:
 
 contest_end = datetime(2025, 7, 18, 16, 59, tzinfo=timezone.utc)
 
-placeholder = st.empty()
+ph = st.empty()
 
-now = datetime.now(timezone.utc)
-remaining = contest_end - now
-
-if remaining.total_seconds() <= 0:
-    placeholder.markdown("**Contest has ended!**")
-else:
-    days = remaining.days
-    hours, remainder = divmod(remaining.seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-
-    placeholder.markdown(
-        f"### Contest ends in: {days}d {hours}h {minutes}m {seconds}s"
-    )
-
+while True:
+    now = datetime.now(timezone.utc)
+    remaining = int((contest_end - now).total_seconds())
+    
+    if remaining <= 0:
+        ph.metric("Contest ends in:", "00:00")
+        st.success("Contest has ended!")
+        break
+    
+    mm, ss = divmod(remaining, 60)
+    ph.metric("Contest ends in:", f"{mm:02d}:{ss:02d}")
+    
     time.sleep(1)
     st.experimental_rerun()
-# ─────────────────────────────────────────────────────────────
 # Team Delta (Current Hour vs Previous)
 # ─────────────────────────────────────────────────────────────
 df_team_agg = df_this_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
