@@ -62,22 +62,6 @@ if base64_image:
 # App Title
 # ─────────────────────────────────────────────────────────────
 
-contest_end = datetime(2025, 7, 18, 16, 59, tzinfo=timezone.utc)
-
-ph = st.empty()
-
-while True:
-    now = datetime.now(timezone.utc)
-    remaining = int((contest_end - now).total_seconds())
-    
-    if remaining <= 0:
-        ph.metric("Contest ends in:", "00:00")
-        st.success("Contest has ended!")
-        break
-    
-    mm, ss = divmod(remaining, 60)
-    ph.metric("Contest ends in:", f"{mm:02d}:{ss:02d}")
-    
 
 # Team Delta (Current Hour vs Previous)
 # ─────────────────────────────────────────────────────────────
