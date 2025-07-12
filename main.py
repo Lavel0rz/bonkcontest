@@ -29,6 +29,8 @@ def load_all_leaderboards():
 df_this_hour = pd.read_csv(f"leaderboard_{CURRENT_HOUR}.csv") if os.path.exists(f"leaderboard_{CURRENT_HOUR}.csv") else pd.DataFrame()
 df_prev_hour = pd.read_csv(f"leaderboard_{PREVIOUS_HOUR}.csv") if os.path.exists(f"leaderboard_{PREVIOUS_HOUR}.csv") else df_this_hour.copy()
 df_prev_hour["Bonk Points Won"] = df_prev_hour.get("Bonk Points Won", 0)
+st.write("df_this_hour columns:", df_this_hour.columns.tolist())
+st.write("df_prev_hour columns:", df_prev_hour.columns.tolist())
 
 # Load all files for cumulative stats
 df = load_all_leaderboards()
