@@ -104,7 +104,7 @@ for team, goal in goals.items():
     with col2:
         st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
         st.progress(progress)
-st.title("Bonk Contest Leaderboard (Hourly)")
+st.title("Bonk Contest Leaderboard")
 
 
 # ─────────────────────────────────────────────────────────────
