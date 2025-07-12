@@ -61,7 +61,51 @@ if base64_image:
 # ─────────────────────────────────────────────────────────────
 # App Title
 # ─────────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────
+# Team Delta (Current Hour vs Previous)
+# ─────────────────────────────────────────────────────────────
+df_team_agg = df_this_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
+df_team_prev = df_prev_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
+
+df_team_agg = df_team_agg.merge(df_team_prev, on="Team", suffixes=("", "_prev"), how="left").fillna(0)
+df_team_agg["Delta"] = df_team_agg["Bonk Points Won"] - df_team_agg["Bonk Points Won_prev"]
+
+st.subheader("📊 Team Points (This Hour vs Last Hour)")
+col1, col2 = st.columns(2)
+for index, row in df_team_agg.iterrows():
+    (col1 if index % 2 == 0 else col2).metric(
+        label=row["Team"],
+        value=int(row["Bonk Points Won"]),
+        delta=int(row["Delta"])
+    )
+
+# ─────────────────────────────────────────────────────────────
+# Progress Bars for Victory Goals
+# ─────────────────────────────────────────────────────────────
+goals = {
+    "$FP x Coinbase wen?": 2_000_000,
+    "FRENEMIES": 1_500_000
+}
+images = {
+    "$FP x Coinbase wen?": "wen.png",
+    "FRENEMIES": "panda3.png"
+}
+
+st.subheader("🎯 Team Bonking Victory Goals")
+for team, goal in goals.items():
+    current_points = df[df["Team"] == team]["Bonk Points Won"].sum()
+    progress = min(current_points / goal, 1.0)
+
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if os.path.exists(images[team]):
+            st.image(images[team], width=100)
+    with col2:
+        st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
+        st.progress(progress)
 st.title("Bonk Contest Leaderboard (Hourly)")
+
 
 # ─────────────────────────────────────────────────────────────
 # Podium (Top 3)
@@ -113,48 +157,7 @@ if len(top_contributors) >= 3:
     </div>
     """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────────────────────
-# Team Delta (Current Hour vs Previous)
-# ─────────────────────────────────────────────────────────────
-df_team_agg = df_this_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
-df_team_prev = df_prev_hour.groupby("Team")["Bonk Points Won"].sum().reset_index()
 
-df_team_agg = df_team_agg.merge(df_team_prev, on="Team", suffixes=("", "_prev"), how="left").fillna(0)
-df_team_agg["Delta"] = df_team_agg["Bonk Points Won"] - df_team_agg["Bonk Points Won_prev"]
-
-st.subheader("📊 Team Points (This Hour vs Last Hour)")
-col1, col2 = st.columns(2)
-for index, row in df_team_agg.iterrows():
-    (col1 if index % 2 == 0 else col2).metric(
-        label=row["Team"],
-        value=int(row["Bonk Points Won"]),
-        delta=int(row["Delta"])
-    )
-
-# ─────────────────────────────────────────────────────────────
-# Progress Bars for Victory Goals
-# ─────────────────────────────────────────────────────────────
-goals = {
-    "$FP x Coinbase wen?": 2_000_000,
-    "FRENEMIES": 1_500_000
-}
-images = {
-    "$FP x Coinbase wen?": "wen.png",
-    "FRENEMIES": "panda3.png"
-}
-
-st.subheader("🎯 Team Bonking Victory Goals")
-for team, goal in goals.items():
-    current_points = df[df["Team"] == team]["Bonk Points Won"].sum()
-    progress = min(current_points / goal, 1.0)
-
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        if os.path.exists(images[team]):
-            st.image(images[team], width=100)
-    with col2:
-        st.write(f"### {team}: {current_points:,.0f} / {goal:,.0f} pts")
-        st.progress(progress)
 
 # ─────────────────────────────────────────────────────────────
 # Top Contributors Overall
