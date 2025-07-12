@@ -185,3 +185,4 @@ if selected_hour_file:
     hourly_contributors = hourly_contributors.sort_values(by="Bonk Points Won", ascending=False)
     st.markdown(hourly_contributors.to_html(index=False), unsafe_allow_html=True)
 
+
