@@ -8,8 +8,8 @@ import base64
 # Timestamp Handling (Current & Previous Hour)
 # ─────────────────────────────────────────────────────────────
 NOW = datetime.now()
-CURRENT_HOUR = NOW.strftime("%Y-%m-%d_%H00")
-PREVIOUS_HOUR = (NOW - timedelta(hours=1)).strftime("%Y-%m-%d_%H00")
+CURRENT_HOUR = "leaderboard_" + NOW.strftime("%Y-%m-%d_%H00")
+PREVIOUS_HOUR = "leaderboard_" + (NOW - timedelta(hours=1)).strftime("%Y-%m-%d_%H00")
 
 # ─────────────────────────────────────────────────────────────
 # Load Leaderboard Files
@@ -26,8 +26,8 @@ def load_all_leaderboards():
     return pd.concat(all_leaderboards, ignore_index=True) if all_leaderboards else pd.DataFrame()
 
 # Load hourly leaderboards
-df_this_hour = pd.read_csv(f"leaderboard_{CURRENT_HOUR}.csv") if os.path.exists(f"leaderboard_{CURRENT_HOUR}.csv") else pd.DataFrame()
-df_prev_hour = pd.read_csv(f"leaderboard_{PREVIOUS_HOUR}.csv") if os.path.exists(f"leaderboard_{PREVIOUS_HOUR}.csv") else df_this_hour.copy()
+df_this_hour = pd.read_csv(f"{CURRENT_HOUR}.csv")
+df_prev_hour = pd.read_csv(f"{PREVIOUS_HOUR}.csv")
 df_prev_hour["Bonk Points Won"] = df_prev_hour.get("Bonk Points Won", 0)
 st.write("df_this_hour columns:", df_this_hour.columns.tolist())
 st.write("df_prev_hour columns:", df_prev_hour.columns.tolist())
