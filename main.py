@@ -29,8 +29,7 @@ def load_all_leaderboards():
 df_this_hour = pd.read_csv(f"{CURRENT_HOUR}.csv")
 df_prev_hour = pd.read_csv(f"{PREVIOUS_HOUR}.csv")
 df_prev_hour["Bonk Points Won"] = df_prev_hour.get("Bonk Points Won", 0)
-st.write("df_this_hour columns:", df_this_hour.columns.tolist())
-st.write("df_prev_hour columns:", df_prev_hour.columns.tolist())
+
 
 # Load all files for cumulative stats
 df = load_all_leaderboards()
